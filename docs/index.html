@@ -66,10 +66,210 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-webpack-package" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/hexo-blog/2022/09/14/webpack-package/" class="article-date">
+  <time datetime="2022-09-14T02:59:54.190Z" itemprop="datePublished">2022-09-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/hexo-blog/2022/09/14/webpack-package/">【webpack】打包一个vue应用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Tag: <code>学习</code> <code>webapck</code></p>
+<p>打包一个vue应用最方便的还是使用官方提供的vue-cli应用，但是，从长远来说，这不利于我们自身的成长；<br>所以让我们暂时忘却vue-cli，基于webpack，从头一点一点去整合出一个webpack打包配置来；</p>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ul>
+<li>打包一个vue应用，可本地运行调试，可打线上包</li>
+</ul>
+<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><h3 id="学习资料"><a href="#学习资料" class="headerlink" title="学习资料"></a>学习资料</h3><p><a target="_blank" rel="noopener" href="http://webpack.wuhaolin.cn/">深入浅出webpack</a></p>
+<p><a target="_blank" rel="noopener" href="https://webpack.docschina.org/concepts/">webpack中文文档</a></p>
+<h3 id="webpack核心概念"><a href="#webpack核心概念" class="headerlink" title="webpack核心概念"></a>webpack核心概念</h3><ul>
+<li>Entry：入口，Webpack 执行构建的第一步将从 Entry 开始，可抽象成输入。</li>
+<li>Module：模块，在 Webpack 里一切皆模块，一个模块对应着一个文件。Webpack 会从配置的 Entry 开始递归找出所有依赖的模块。</li>
+<li>Chunk：代码块，一个 Chunk 由多个模块组合而成，用于代码合并与分割。</li>
+<li>Loader：模块转换器，用于把模块原内容按照需求转换成新内容。</li>
+<li>Plugin：扩展插件，在 Webpack 构建流程中的特定时机注入扩展逻辑来改变构建结果或做你想要的事情。</li>
+<li>Output：输出结果，在 Webpack 经过一系列处理并得出最终想要的代码后输出结果。</li>
+</ul>
+<h3 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h3><p><a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn/">node-v16.9.1</a><br><a target="_blank" rel="noopener" href="https://cli.vuejs.org/zh/guide/installation.html">vue-cli(用于生成一个vue基本工程)</a></p>
+<p>依赖版本相关<br>“webpack”: “^5.64.1”,<br>“webpack-cli”: “^4.9.1”,</p>
+<h3 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h3><ul>
+<li><p>开发语言 ( JS (ES5/ES6+) or TS )</p>
+<p>使用ES6，借助Babel</p>
+</li>
+<li><p>css预处理器 ( Less (.less) | Sass (.scss/.sass) | Stylus(.stylus/.styl) | Postcss )</p>
+<p>使用Less</p>
+</li>
+</ul>
+<h3 id="一个空vue工程"><a href="#一个空vue工程" class="headerlink" title="一个空vue工程"></a>一个空vue工程</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 验证cli是否安装成功</span></span><br><span class="line">vue -V <span class="comment">// 3.5.1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Mac/linux系统</span></span><br><span class="line">vue create webpack-practice</span><br><span class="line"><span class="comment">// Windows系统</span></span><br><span class="line">winpty vue.<span class="property">cmd</span> create webpack-practice</span><br><span class="line"></span><br><span class="line"><span class="comment">// 选择default(babel, eslint)</span></span><br><span class="line">cd webpack-practice</span><br><span class="line">npm run serve</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  DONE  Compiled successfully in 3542ms </span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * App running at:</span></span><br><span class="line"><span class="comment">  - Local:   http://localhost:8080/ </span></span><br><span class="line"><span class="comment">  - Network: http://x.x.x.x:8080/</span></span><br><span class="line"><span class="comment">  Note that the development build is not optimized.</span></span><br><span class="line"><span class="comment">  To create a production build, run npm run build.</span></span><br><span class="line"><span class="comment"> * /</span></span><br><span class="line"><span class="comment">// 出现以上字样表示空工程已就绪</span></span><br></pre></td></tr></table></figure>
+
+<p>一切准备就绪，下面开始进入正题</p>
+<h2 id="基础依赖及配置"><a href="#基础依赖及配置" class="headerlink" title="基础依赖及配置"></a>基础依赖及配置</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i webpack webpack-cli -D</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json - add npm script</span></span><br><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;start&quot;</span>: <span class="string">&quot;webpack&quot;</span>,</span><br><span class="line">  <span class="string">&quot;serve:webpack&quot;</span>: <span class="string">&quot;webpack serve&quot;</span>,</span><br><span class="line">  <span class="string">&quot;build:webpack&quot;</span>: <span class="string">&quot;webpack --mode production&quot;</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 根目录 - ./webpack.config.js</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * webapck配置总入口</span></span><br><span class="line"><span class="comment"> * 将配置分成三份，common/dev/prod</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> merge = <span class="built_in">require</span>(<span class="string">&#x27;webpack-merge&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> commonConfig = <span class="built_in">require</span>(<span class="string">&#x27;./build/webpack-common.config.js&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> developmentConfig = <span class="built_in">require</span>(<span class="string">&#x27;./build/webpack-dev.config.js&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> productionConfig = <span class="built_in">require</span>(<span class="string">&#x27;./build/webpack-prod.config.js&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="function">(<span class="params">env, args</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (args.<span class="property">mode</span> === <span class="string">&#x27;production&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">merge</span>(commonConfig, productionConfig);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">merge</span>(commonConfig, developmentConfig);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// build目录 - ./build/webpack-common.config.js</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * webapck配置文档</span></span><br><span class="line"><span class="comment"> * docs: https://webpack.docschina.org/concepts/</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">resolve</span> (dir) &#123;</span><br><span class="line">  <span class="keyword">return</span> path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;..&#x27;</span>, dir)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 入口(entry)</span></span><br><span class="line"><span class="comment">   * 入口起点(entry point) 指示 webpack 应该使用哪个模块，来作为构建其内部 依赖图(dependency graph) 的开始。进入入口起点后，webpack 会找出有哪些模块和库是入口起点（直接和间接）依赖的。</span></span><br><span class="line"><span class="comment">   * 默认值是 ./src/index.js</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">entry</span>: <span class="string">&#x27;./src/main.js&#x27;</span>,</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 输出(output)</span></span><br><span class="line"><span class="comment">   * output 属性告诉 webpack 在哪里输出它所创建的 bundle，以及如何命名这些文件。主要输出文件的默认值是 ./dist/main.js，其他生成文件默认放置在 ./dist 文件夹中。</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">   <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="title function_">resolve</span>(<span class="string">&#x27;/dist&#x27;</span>), <span class="comment">// 需要绝对路径</span></span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].js&#x27;</span>,</span><br><span class="line">    <span class="attr">publicPath</span>: <span class="string">&#x27;/&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// build目录 - ./build/webpack-dev.config.js</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 开发环境webpack配置</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;development&#x27;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// build目录 - ./build/webpack-prod.config.js</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 生产环境webpack配置</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;production&#x27;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此webpack相关基本配置已完成</p>
+<p>开始执行打包命令：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">npm run start</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * ERROR in ./src/App.vue 1:0</span></span><br><span class="line"><span class="comment">Module parse failed: Unexpected token (1:0)</span></span><br><span class="line"><span class="comment">You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders</span></span><br><span class="line"><span class="comment">&gt; &lt;template&gt;</span></span><br><span class="line"><span class="comment">|   &lt;div id=&quot;app&quot;&gt;</span></span><br><span class="line"><span class="comment">|     &lt;img alt=&quot;Vue logo&quot; src=&quot;./assets/logo.png&quot;&gt;</span></span><br><span class="line"><span class="comment"> @ ./src/main.js 2:0-27 7:17-20</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * /</span></span><br></pre></td></tr></table></figure>
+
+<p>报错了，大概意思是.vue文件它不能识别，需要借助相关loader处理</p>
+<h2 id="loader配置"><a href="#loader配置" class="headerlink" title="loader配置"></a>loader配置</h2><h3 id="vue-loader"><a href="#vue-loader" class="headerlink" title="vue-loader"></a>vue-loader</h3><p><a target="_blank" rel="noopener" href="https://vue-loader.vuejs.org/zh/">vue-loader</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vue-loader因为已经通过cli安装了，所以不需要再安装了</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ./build/webpack-common.config.js - 更新配置</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="title class_">VueLoaderPlugin</span> &#125; = <span class="built_in">require</span>(<span class="string">&#x27;vue-loader&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">module</span>: &#123;</span><br><span class="line">    <span class="attr">rules</span>: [</span><br><span class="line">      <span class="comment">// ... 其它规则</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.vue$/</span>,</span><br><span class="line">        <span class="attr">loader</span>: <span class="string">&#x27;vue-loader&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="comment">// 请确保引入这个插件！</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">VueLoaderPlugin</span>()</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 再次执行打包命令</span></span><br><span class="line">npm run start</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * ERROR in ./src/App.vue?vue&amp;type=style&amp;index=0&amp;lang=css&amp; (./node_modules/vue-loader/lib??vue-loader-options!./src/App.vue?vue&amp;type=style&amp;index=0&amp;lang=css&amp;) 20:0</span></span><br><span class="line"><span class="comment">Module parse failed: Unexpected character &#x27;#&#x27; (20:0)</span></span><br><span class="line"><span class="comment">File was processed with these loaders:</span></span><br><span class="line"><span class="comment"> * ./node_modules/vue-loader/lib/index.js</span></span><br><span class="line"><span class="comment">You may need an additional loader to handle the result of these loaders.</span></span><br><span class="line"><span class="comment">| </span></span><br><span class="line"><span class="comment">| </span></span><br><span class="line"><span class="comment">&gt; #app &#123;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>又报错了，这次是识别不了图片和css样式，得，继续配置loader</p>
+<h3 id="css-loader-url-loader"><a href="#css-loader-url-loader" class="headerlink" title="css-loader / url-loader"></a>css-loader / url-loader</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// css-loader因为已经通过cli安装了，所以不需要再安装了</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ./build/webpack-common.config.js - 更新配置</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">module</span>: &#123;</span><br><span class="line">    <span class="attr">rules</span>: [</span><br><span class="line">      <span class="comment">// 其他loader</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.css$/</span>,</span><br><span class="line">        <span class="attr">use</span>: [<span class="string">&#x27;vue-style-loader&#x27;</span>, <span class="string">&#x27;css-loader&#x27;</span>]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.png$/</span>,</span><br><span class="line">        <span class="attr">loader</span>: <span class="string">&#x27;url-loader&#x27;</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 再次执行打包命令</span></span><br><span class="line">npm run start</span><br><span class="line"></span><br><span class="line"><span class="comment">// nice 打包成功</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><ul>
+<li><p>css-loader 会找出 CSS 代码中的 @import 和 url() 这样的导入语句，告诉 Webpack 依赖这些资源。同时还支持 CSS Modules、压缩 CSS 等功能。处理完后再把结果交给 style-loader 去处理。</p>
+</li>
+<li><p>style-loader 会把 CSS 代码转换成字符串后，注入到 JavaScript 代码中去，通过 JavaScript 去给 DOM 增加样式。</p>
+</li>
+</ul>
+<p>这里使用的vue-style-loader是fork了style-loader的源代码，对vue文件做了一些定制化处理。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>熟悉并实践了一下webpack的基本配置</li>
+<li>使用vue-loader加载.vue单文件</li>
+<li>使用css-loader/vue-style-loader加载.css文件</li>
+<li>使用url-loader加载图片资源文件</li>
+</ul>
+<p>其他未解决问题（后续再更新）：</p>
+<ul>
+<li>css预处理文件处理 ，比如less (less-loader)</li>
+<li>ES6转ES5语法 (babel-loader)</li>
+<li>本地运行一个服务并支持热更新 (wepack-dev-server)</li>
+<li>字体等文件的加载 (url-loader)</li>
+<li>视频等文件的加载 (url-loader)</li>
+<li>其他实用的功能（比如vue支持jsx的写法）</li>
+<li>线上打包的优化等等</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://happydemoney.github.io/hexo-blog/2022/09/14/webpack-package/" data-id="cl811kyig0003b0w16rfr57p2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-reduce" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/hexo-blog/2022/09/14/reduce/" class="article-date">
+  <time datetime="2022-09-14T02:59:54.185Z" itemprop="datePublished">2022-09-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/hexo-blog/2022/09/14/reduce/">【实现API】数组reduce方法的实现</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">MDN-Array.prototype.reduce</a></p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>reduce() 方法对数组中的每个元素按序执行一个由您提供的 reducer 函数，每一次运行 reducer 会将先前元素的计算结果作为参数传入，最后将其结果汇总为单个返回值。</p>
+<p>第一次执行回调函数时，不存在“上一次的计算结果”。如果需要回调函数从数组索引为 0 的元素开始执行，则需要传递初始值。否则，数组索引为 0 的元素将被作为初始值 initialValue，迭代器将从第二个元素开始执行（索引为 1 而不是 0）。</p>
+<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> array1 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 0 + 1 + 2 + 3 + 4</span></span><br><span class="line"><span class="keyword">const</span> initialValue = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> sumWithInitial = array1.<span class="title function_">reduce</span>(</span><br><span class="line">  <span class="function">(<span class="params">previousValue, currentValue</span>) =&gt;</span> previousValue + currentValue,</span><br><span class="line">  initialValue</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(sumWithInitial);</span><br><span class="line"><span class="comment">// expected output: 10</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">reduceFn</span> = <span class="keyword">function</span> (<span class="params">reducer<span class="comment">/*, initValue*/</span></span>) &#123;</span><br><span class="line">  <span class="comment">// reducer必须是一个函数</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> reducer !== <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">`<span class="subst">$&#123;reducer&#125;</span> is not a function.`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 是否包含初始值</span></span><br><span class="line">  <span class="keyword">const</span> hasInitValue = <span class="variable language_">arguments</span>.<span class="property">length</span> &gt; <span class="number">1</span>;</span><br><span class="line">  <span class="comment">// 当前遍历的数组</span></span><br><span class="line">  <span class="keyword">const</span> array = <span class="title class_">Object</span>(<span class="variable language_">this</span>);</span><br><span class="line">  <span class="keyword">const</span> length = array.<span class="property">length</span>;</span><br><span class="line">  <span class="comment">// 数组长度要大于0或包含初始值</span></span><br><span class="line">  <span class="keyword">if</span> (length === <span class="number">0</span> &amp;&amp; !hasInitValue) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;Reduce of empty array with no initial value&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 上一次调用 reducer 时的返回值, 此处为初始值赋值</span></span><br><span class="line">  <span class="keyword">let</span> previousValue = hasInitValue ? <span class="variable language_">arguments</span>[<span class="number">1</span>] : array[<span class="number">0</span>];</span><br><span class="line">  <span class="comment">// 数组中正在处理的元素的索引</span></span><br><span class="line">  <span class="keyword">let</span> currentIndex = hasInitValue ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span> (currentIndex &lt; length) &#123;</span><br><span class="line">    previousValue = <span class="title function_">reducer</span>(previousValue, array[currentIndex], currentIndex, array);</span><br><span class="line">    currentIndex ++;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> previousValue;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// test</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>].<span class="title function_">reduceFn</span>(<span class="function">(<span class="params">prev, cur</span>) =&gt;</span> prev + cur); <span class="comment">// 15</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>].<span class="title function_">reduceFn</span>(<span class="function">(<span class="params">prev, cur</span>) =&gt;</span> prev + cur, <span class="number">10</span>); <span class="comment">// 25</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://happydemoney.github.io/hexo-blog/2022/09/14/reduce/" data-id="cl811kyhx0002b0w10ekydjk3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/hexo-blog/2022/09/14/hello-world/" class="article-date">
+  <time datetime="2022-09-14T02:59:54.180Z" itemprop="datePublished">2022-09-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/hexo-blog/2022/09/14/hello-world/">Hexo Simple Use</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://happydemoney.github.io/hexo-blog/2022/09/14/hello-world/" data-id="cl811kyht0001b0w18gud6gvk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-algorithms-test" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/hexo-blog/2022/09/14/algorithms-test/" class="article-date">
-  <time datetime="2022-09-14T02:50:02.680Z" itemprop="datePublished">2022-09-14</time>
+  <time datetime="2022-09-14T02:59:54.174Z" itemprop="datePublished">2022-09-14</time>
 </a>
     
   </div>
@@ -223,207 +423,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://happydemoney.github.io/hexo-blog/2022/09/14/algorithms-test/" data-id="cl8113syg0000n0w13bs24s3r" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-webpack-package" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/hexo-blog/2022/09/14/webpack-package/" class="article-date">
-  <time datetime="2022-09-14T02:45:38.247Z" itemprop="datePublished">2022-09-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hexo-blog/2022/09/14/webpack-package/">【webpack】打包一个vue应用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Tag: <code>学习</code> <code>webapck</code></p>
-<p>打包一个vue应用最方便的还是使用官方提供的vue-cli应用，但是，从长远来说，这不利于我们自身的成长；<br>所以让我们暂时忘却vue-cli，基于webpack，从头一点一点去整合出一个webpack打包配置来；</p>
-<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ul>
-<li>打包一个vue应用，可本地运行调试，可打线上包</li>
-</ul>
-<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><h3 id="学习资料"><a href="#学习资料" class="headerlink" title="学习资料"></a>学习资料</h3><p><a target="_blank" rel="noopener" href="http://webpack.wuhaolin.cn/">深入浅出webpack</a></p>
-<p><a target="_blank" rel="noopener" href="https://webpack.docschina.org/concepts/">webpack中文文档</a></p>
-<h3 id="webpack核心概念"><a href="#webpack核心概念" class="headerlink" title="webpack核心概念"></a>webpack核心概念</h3><ul>
-<li>Entry：入口，Webpack 执行构建的第一步将从 Entry 开始，可抽象成输入。</li>
-<li>Module：模块，在 Webpack 里一切皆模块，一个模块对应着一个文件。Webpack 会从配置的 Entry 开始递归找出所有依赖的模块。</li>
-<li>Chunk：代码块，一个 Chunk 由多个模块组合而成，用于代码合并与分割。</li>
-<li>Loader：模块转换器，用于把模块原内容按照需求转换成新内容。</li>
-<li>Plugin：扩展插件，在 Webpack 构建流程中的特定时机注入扩展逻辑来改变构建结果或做你想要的事情。</li>
-<li>Output：输出结果，在 Webpack 经过一系列处理并得出最终想要的代码后输出结果。</li>
-</ul>
-<h3 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h3><p><a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn/">node-v16.9.1</a><br><a target="_blank" rel="noopener" href="https://cli.vuejs.org/zh/guide/installation.html">vue-cli(用于生成一个vue基本工程)</a></p>
-<p>依赖版本相关<br>“webpack”: “^5.64.1”,<br>“webpack-cli”: “^4.9.1”,</p>
-<h3 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h3><ul>
-<li><p>开发语言 ( JS (ES5/ES6+) or TS )</p>
-<p>使用ES6，借助Babel</p>
-</li>
-<li><p>css预处理器 ( Less (.less) | Sass (.scss/.sass) | Stylus(.stylus/.styl) | Postcss )</p>
-<p>使用Less</p>
-</li>
-</ul>
-<h3 id="一个空vue工程"><a href="#一个空vue工程" class="headerlink" title="一个空vue工程"></a>一个空vue工程</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 验证cli是否安装成功</span></span><br><span class="line">vue -V <span class="comment">// 3.5.1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Mac/linux系统</span></span><br><span class="line">vue create webpack-practice</span><br><span class="line"><span class="comment">// Windows系统</span></span><br><span class="line">winpty vue.<span class="property">cmd</span> create webpack-practice</span><br><span class="line"></span><br><span class="line"><span class="comment">// 选择default(babel, eslint)</span></span><br><span class="line">cd webpack-practice</span><br><span class="line">npm run serve</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  DONE  Compiled successfully in 3542ms </span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * App running at:</span></span><br><span class="line"><span class="comment">  - Local:   http://localhost:8080/ </span></span><br><span class="line"><span class="comment">  - Network: http://x.x.x.x:8080/</span></span><br><span class="line"><span class="comment">  Note that the development build is not optimized.</span></span><br><span class="line"><span class="comment">  To create a production build, run npm run build.</span></span><br><span class="line"><span class="comment"> * /</span></span><br><span class="line"><span class="comment">// 出现以上字样表示空工程已就绪</span></span><br></pre></td></tr></table></figure>
-
-<p>一切准备就绪，下面开始进入正题</p>
-<h2 id="基础依赖及配置"><a href="#基础依赖及配置" class="headerlink" title="基础依赖及配置"></a>基础依赖及配置</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i webpack webpack-cli -D</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// package.json - add npm script</span></span><br><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;start&quot;</span>: <span class="string">&quot;webpack&quot;</span>,</span><br><span class="line">  <span class="string">&quot;serve:webpack&quot;</span>: <span class="string">&quot;webpack serve&quot;</span>,</span><br><span class="line">  <span class="string">&quot;build:webpack&quot;</span>: <span class="string">&quot;webpack --mode production&quot;</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 根目录 - ./webpack.config.js</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * webapck配置总入口</span></span><br><span class="line"><span class="comment"> * 将配置分成三份，common/dev/prod</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> merge = <span class="built_in">require</span>(<span class="string">&#x27;webpack-merge&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> commonConfig = <span class="built_in">require</span>(<span class="string">&#x27;./build/webpack-common.config.js&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> developmentConfig = <span class="built_in">require</span>(<span class="string">&#x27;./build/webpack-dev.config.js&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> productionConfig = <span class="built_in">require</span>(<span class="string">&#x27;./build/webpack-prod.config.js&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="function">(<span class="params">env, args</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (args.<span class="property">mode</span> === <span class="string">&#x27;production&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">merge</span>(commonConfig, productionConfig);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">merge</span>(commonConfig, developmentConfig);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// build目录 - ./build/webpack-common.config.js</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * webapck配置文档</span></span><br><span class="line"><span class="comment"> * docs: https://webpack.docschina.org/concepts/</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">resolve</span> (dir) &#123;</span><br><span class="line">  <span class="keyword">return</span> path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;..&#x27;</span>, dir)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 入口(entry)</span></span><br><span class="line"><span class="comment">   * 入口起点(entry point) 指示 webpack 应该使用哪个模块，来作为构建其内部 依赖图(dependency graph) 的开始。进入入口起点后，webpack 会找出有哪些模块和库是入口起点（直接和间接）依赖的。</span></span><br><span class="line"><span class="comment">   * 默认值是 ./src/index.js</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="attr">entry</span>: <span class="string">&#x27;./src/main.js&#x27;</span>,</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 输出(output)</span></span><br><span class="line"><span class="comment">   * output 属性告诉 webpack 在哪里输出它所创建的 bundle，以及如何命名这些文件。主要输出文件的默认值是 ./dist/main.js，其他生成文件默认放置在 ./dist 文件夹中。</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">   <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="title function_">resolve</span>(<span class="string">&#x27;/dist&#x27;</span>), <span class="comment">// 需要绝对路径</span></span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].js&#x27;</span>,</span><br><span class="line">    <span class="attr">publicPath</span>: <span class="string">&#x27;/&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// build目录 - ./build/webpack-dev.config.js</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 开发环境webpack配置</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;development&#x27;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// build目录 - ./build/webpack-prod.config.js</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 生产环境webpack配置</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;production&#x27;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>至此webpack相关基本配置已完成</p>
-<p>开始执行打包命令：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">npm run start</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * ERROR in ./src/App.vue 1:0</span></span><br><span class="line"><span class="comment">Module parse failed: Unexpected token (1:0)</span></span><br><span class="line"><span class="comment">You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders</span></span><br><span class="line"><span class="comment">&gt; &lt;template&gt;</span></span><br><span class="line"><span class="comment">|   &lt;div id=&quot;app&quot;&gt;</span></span><br><span class="line"><span class="comment">|     &lt;img alt=&quot;Vue logo&quot; src=&quot;./assets/logo.png&quot;&gt;</span></span><br><span class="line"><span class="comment"> @ ./src/main.js 2:0-27 7:17-20</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * /</span></span><br></pre></td></tr></table></figure>
-
-<p>报错了，大概意思是.vue文件它不能识别，需要借助相关loader处理</p>
-<h2 id="loader配置"><a href="#loader配置" class="headerlink" title="loader配置"></a>loader配置</h2><h3 id="vue-loader"><a href="#vue-loader" class="headerlink" title="vue-loader"></a>vue-loader</h3><p><a target="_blank" rel="noopener" href="https://vue-loader.vuejs.org/zh/">vue-loader</a></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vue-loader因为已经通过cli安装了，所以不需要再安装了</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ./build/webpack-common.config.js - 更新配置</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="title class_">VueLoaderPlugin</span> &#125; = <span class="built_in">require</span>(<span class="string">&#x27;vue-loader&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">module</span>: &#123;</span><br><span class="line">    <span class="attr">rules</span>: [</span><br><span class="line">      <span class="comment">// ... 其它规则</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.vue$/</span>,</span><br><span class="line">        <span class="attr">loader</span>: <span class="string">&#x27;vue-loader&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="comment">// 请确保引入这个插件！</span></span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">VueLoaderPlugin</span>()</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 再次执行打包命令</span></span><br><span class="line">npm run start</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * ERROR in ./src/App.vue?vue&amp;type=style&amp;index=0&amp;lang=css&amp; (./node_modules/vue-loader/lib??vue-loader-options!./src/App.vue?vue&amp;type=style&amp;index=0&amp;lang=css&amp;) 20:0</span></span><br><span class="line"><span class="comment">Module parse failed: Unexpected character &#x27;#&#x27; (20:0)</span></span><br><span class="line"><span class="comment">File was processed with these loaders:</span></span><br><span class="line"><span class="comment"> * ./node_modules/vue-loader/lib/index.js</span></span><br><span class="line"><span class="comment">You may need an additional loader to handle the result of these loaders.</span></span><br><span class="line"><span class="comment">| </span></span><br><span class="line"><span class="comment">| </span></span><br><span class="line"><span class="comment">&gt; #app &#123;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-
-<p>又报错了，这次是识别不了图片和css样式，得，继续配置loader</p>
-<h3 id="css-loader-url-loader"><a href="#css-loader-url-loader" class="headerlink" title="css-loader / url-loader"></a>css-loader / url-loader</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// css-loader因为已经通过cli安装了，所以不需要再安装了</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ./build/webpack-common.config.js - 更新配置</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">module</span>: &#123;</span><br><span class="line">    <span class="attr">rules</span>: [</span><br><span class="line">      <span class="comment">// 其他loader</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.css$/</span>,</span><br><span class="line">        <span class="attr">use</span>: [<span class="string">&#x27;vue-style-loader&#x27;</span>, <span class="string">&#x27;css-loader&#x27;</span>]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/\.png$/</span>,</span><br><span class="line">        <span class="attr">loader</span>: <span class="string">&#x27;url-loader&#x27;</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 再次执行打包命令</span></span><br><span class="line">npm run start</span><br><span class="line"></span><br><span class="line"><span class="comment">// nice 打包成功</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><ul>
-<li><p>css-loader 会找出 CSS 代码中的 @import 和 url() 这样的导入语句，告诉 Webpack 依赖这些资源。同时还支持 CSS Modules、压缩 CSS 等功能。处理完后再把结果交给 style-loader 去处理。</p>
-</li>
-<li><p>style-loader 会把 CSS 代码转换成字符串后，注入到 JavaScript 代码中去，通过 JavaScript 去给 DOM 增加样式。</p>
-</li>
-</ul>
-<p>这里使用的vue-style-loader是fork了style-loader的源代码，对vue文件做了一些定制化处理。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li>熟悉并实践了一下webpack的基本配置</li>
-<li>使用vue-loader加载.vue单文件</li>
-<li>使用css-loader/vue-style-loader加载.css文件</li>
-<li>使用url-loader加载图片资源文件</li>
-</ul>
-<p>其他未解决问题（后续再更新）：</p>
-<ul>
-<li>css预处理文件处理 ，比如less (less-loader)</li>
-<li>ES6转ES5语法 (babel-loader)</li>
-<li>本地运行一个服务并支持热更新 (wepack-dev-server)</li>
-<li>字体等文件的加载 (url-loader)</li>
-<li>视频等文件的加载 (url-loader)</li>
-<li>其他实用的功能（比如vue支持jsx的写法）</li>
-<li>线上打包的优化等等</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://happydemoney.github.io/hexo-blog/2022/09/14/webpack-package/" data-id="cl8113szc0003n0w1037ugmgv" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-reduce" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/hexo-blog/2022/09/14/reduce/" class="article-date">
-  <time datetime="2022-09-14T02:45:38.242Z" itemprop="datePublished">2022-09-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hexo-blog/2022/09/14/reduce/">【实现API】数组reduce方法的实现</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">MDN-Array.prototype.reduce</a></p>
-<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>reduce() 方法对数组中的每个元素按序执行一个由您提供的 reducer 函数，每一次运行 reducer 会将先前元素的计算结果作为参数传入，最后将其结果汇总为单个返回值。</p>
-<p>第一次执行回调函数时，不存在“上一次的计算结果”。如果需要回调函数从数组索引为 0 的元素开始执行，则需要传递初始值。否则，数组索引为 0 的元素将被作为初始值 initialValue，迭代器将从第二个元素开始执行（索引为 1 而不是 0）。</p>
-<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> array1 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 0 + 1 + 2 + 3 + 4</span></span><br><span class="line"><span class="keyword">const</span> initialValue = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> sumWithInitial = array1.<span class="title function_">reduce</span>(</span><br><span class="line">  <span class="function">(<span class="params">previousValue, currentValue</span>) =&gt;</span> previousValue + currentValue,</span><br><span class="line">  initialValue</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(sumWithInitial);</span><br><span class="line"><span class="comment">// expected output: 10</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">reduceFn</span> = <span class="keyword">function</span> (<span class="params">reducer<span class="comment">/*, initValue*/</span></span>) &#123;</span><br><span class="line">  <span class="comment">// reducer必须是一个函数</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> reducer !== <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">`<span class="subst">$&#123;reducer&#125;</span> is not a function.`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 是否包含初始值</span></span><br><span class="line">  <span class="keyword">const</span> hasInitValue = <span class="variable language_">arguments</span>.<span class="property">length</span> &gt; <span class="number">1</span>;</span><br><span class="line">  <span class="comment">// 当前遍历的数组</span></span><br><span class="line">  <span class="keyword">const</span> array = <span class="title class_">Object</span>(<span class="variable language_">this</span>);</span><br><span class="line">  <span class="keyword">const</span> length = array.<span class="property">length</span>;</span><br><span class="line">  <span class="comment">// 数组长度要大于0或包含初始值</span></span><br><span class="line">  <span class="keyword">if</span> (length === <span class="number">0</span> &amp;&amp; !hasInitValue) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;Reduce of empty array with no initial value&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 上一次调用 reducer 时的返回值, 此处为初始值赋值</span></span><br><span class="line">  <span class="keyword">let</span> previousValue = hasInitValue ? <span class="variable language_">arguments</span>[<span class="number">1</span>] : array[<span class="number">0</span>];</span><br><span class="line">  <span class="comment">// 数组中正在处理的元素的索引</span></span><br><span class="line">  <span class="keyword">let</span> currentIndex = hasInitValue ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span> (currentIndex &lt; length) &#123;</span><br><span class="line">    previousValue = <span class="title function_">reducer</span>(previousValue, array[currentIndex], currentIndex, array);</span><br><span class="line">    currentIndex ++;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> previousValue;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// test</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>].<span class="title function_">reduceFn</span>(<span class="function">(<span class="params">prev, cur</span>) =&gt;</span> prev + cur); <span class="comment">// 15</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>].<span class="title function_">reduceFn</span>(<span class="function">(<span class="params">prev, cur</span>) =&gt;</span> prev + cur, <span class="number">10</span>); <span class="comment">// 25</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://happydemoney.github.io/hexo-blog/2022/09/14/reduce/" data-id="cl8113syw0001n0w195hp2okq" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/hexo-blog/2022/09/14/hello-world/" class="article-date">
-  <time datetime="2022-09-14T02:45:38.236Z" itemprop="datePublished">2022-09-14</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hexo-blog/2022/09/14/hello-world/">Hexo Simple Use</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://happydemoney.github.io/hexo-blog/2022/09/14/hello-world/" data-id="cl8113sz00002n0w10p9r01a4" class="article-share-link">Share</a>
+      <a data-url="https://happydemoney.github.io/hexo-blog/2022/09/14/algorithms-test/" data-id="cl811kyhd0000b0w1c6cr2o1e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -464,10 +464,6 @@
       <ul>
         
           <li>
-            <a href="/hexo-blog/2022/09/14/algorithms-test/">【算法】深入掌握算法系列</a>
-          </li>
-        
-          <li>
             <a href="/hexo-blog/2022/09/14/webpack-package/">【webpack】打包一个vue应用</a>
           </li>
         
@@ -477,6 +473,10 @@
         
           <li>
             <a href="/hexo-blog/2022/09/14/hello-world/">Hexo Simple Use</a>
+          </li>
+        
+          <li>
+            <a href="/hexo-blog/2022/09/14/algorithms-test/">【算法】深入掌握算法系列</a>
           </li>
         
       </ul>
