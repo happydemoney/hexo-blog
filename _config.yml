@@ -4,7 +4,7 @@
 
 # Site
 title: 小彬哥的博客
-subtitle: '个人随笔'
+subtitle: '小彬哥个人随笔-简单聊聊工作以及生活感悟'
 description: '简单聊聊工作以及生活感悟'
 keywords:
 author: Yaobing Qian
@@ -97,7 +97,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: fluid
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
