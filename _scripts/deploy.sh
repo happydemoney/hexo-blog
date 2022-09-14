@@ -2,6 +2,10 @@
 yarn clean
 # 打包静态资源文件
 yarn build
+# 为避免git chckout报错，先提交master分支
+git add .
+git commit -m '新增一篇博客'
+git push
 # 切换到gh-pages分支
 git checkout gh-pages
 # 清理docs目录文件
