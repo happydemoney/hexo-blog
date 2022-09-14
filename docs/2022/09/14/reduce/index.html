@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>【实现API】数组reduce方法的实现 | 小彬哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="MDN-Array.prototype.reduce 介绍reduce() 方法对数组中的每个元素按序执行一个由您提供的 reducer 函数，每一次运行 reducer 会将先前元素的计算结果作为参数传入，最后将其结果汇总为单个返回值。 第一次执行回调函数时，不存在“上一次的计算结果”。如果需要回调函数从数组索引为 0 的元素开始执行，则需要传递初始值。否则，数组索引为 0 的元素将被作为初始值">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【实现API】数组reduce方法的实现">
+<meta property="og:url" content="https://happydemoney.github.io/hexo-blog/2022/09/14/reduce/index.html">
+<meta property="og:site_name" content="小彬哥的博客">
+<meta property="og:description" content="MDN-Array.prototype.reduce 介绍reduce() 方法对数组中的每个元素按序执行一个由您提供的 reducer 函数，每一次运行 reducer 会将先前元素的计算结果作为参数传入，最后将其结果汇总为单个返回值。 第一次执行回调函数时，不存在“上一次的计算结果”。如果需要回调函数从数组索引为 0 的元素开始执行，则需要传递初始值。否则，数组索引为 0 的元素将被作为初始值">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-14T02:45:38.242Z">
+<meta property="article:modified_time" content="2022-09-14T02:45:38.243Z">
+<meta property="article:author" content="Yaobing Qian">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/hexo-blog/atom.xml" title="小彬哥的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/hexo-blog/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/hexo-blog/" id="logo">小彬哥的博客</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/hexo-blog/">Home</a>
+        
+          <a class="main-nav-link" href="/hexo-blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/hexo-blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://happydemoney.github.io/hexo-blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-reduce" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/hexo-blog/2022/09/14/reduce/" class="article-date">
+  <time datetime="2022-09-14T02:45:38.242Z" itemprop="datePublished">2022-09-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      【实现API】数组reduce方法的实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">MDN-Array.prototype.reduce</a></p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>reduce() 方法对数组中的每个元素按序执行一个由您提供的 reducer 函数，每一次运行 reducer 会将先前元素的计算结果作为参数传入，最后将其结果汇总为单个返回值。</p>
+<p>第一次执行回调函数时，不存在“上一次的计算结果”。如果需要回调函数从数组索引为 0 的元素开始执行，则需要传递初始值。否则，数组索引为 0 的元素将被作为初始值 initialValue，迭代器将从第二个元素开始执行（索引为 1 而不是 0）。</p>
+<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> array1 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 0 + 1 + 2 + 3 + 4</span></span><br><span class="line"><span class="keyword">const</span> initialValue = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> sumWithInitial = array1.<span class="title function_">reduce</span>(</span><br><span class="line">  <span class="function">(<span class="params">previousValue, currentValue</span>) =&gt;</span> previousValue + currentValue,</span><br><span class="line">  initialValue</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(sumWithInitial);</span><br><span class="line"><span class="comment">// expected output: 10</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">reduceFn</span> = <span class="keyword">function</span> (<span class="params">reducer<span class="comment">/*, initValue*/</span></span>) &#123;</span><br><span class="line">  <span class="comment">// reducer必须是一个函数</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> reducer !== <span class="string">&#x27;function&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">`<span class="subst">$&#123;reducer&#125;</span> is not a function.`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 是否包含初始值</span></span><br><span class="line">  <span class="keyword">const</span> hasInitValue = <span class="variable language_">arguments</span>.<span class="property">length</span> &gt; <span class="number">1</span>;</span><br><span class="line">  <span class="comment">// 当前遍历的数组</span></span><br><span class="line">  <span class="keyword">const</span> array = <span class="title class_">Object</span>(<span class="variable language_">this</span>);</span><br><span class="line">  <span class="keyword">const</span> length = array.<span class="property">length</span>;</span><br><span class="line">  <span class="comment">// 数组长度要大于0或包含初始值</span></span><br><span class="line">  <span class="keyword">if</span> (length === <span class="number">0</span> &amp;&amp; !hasInitValue) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&#x27;Reduce of empty array with no initial value&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 上一次调用 reducer 时的返回值, 此处为初始值赋值</span></span><br><span class="line">  <span class="keyword">let</span> previousValue = hasInitValue ? <span class="variable language_">arguments</span>[<span class="number">1</span>] : array[<span class="number">0</span>];</span><br><span class="line">  <span class="comment">// 数组中正在处理的元素的索引</span></span><br><span class="line">  <span class="keyword">let</span> currentIndex = hasInitValue ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span> (currentIndex &lt; length) &#123;</span><br><span class="line">    previousValue = <span class="title function_">reducer</span>(previousValue, array[currentIndex], currentIndex, array);</span><br><span class="line">    currentIndex ++;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> previousValue;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// test</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>].<span class="title function_">reduceFn</span>(<span class="function">(<span class="params">prev, cur</span>) =&gt;</span> prev + cur); <span class="comment">// 15</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>].<span class="title function_">reduceFn</span>(<span class="function">(<span class="params">prev, cur</span>) =&gt;</span> prev + cur, <span class="number">10</span>); <span class="comment">// 25</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://happydemoney.github.io/hexo-blog/2022/09/14/reduce/" data-id="cl8113syw0001n0w195hp2okq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/hexo-blog/2022/09/14/webpack-package/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          【webpack】打包一个vue应用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/hexo-blog/2022/09/14/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hexo Simple Use</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/hexo-blog/archives/2022/09/">九月 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/hexo-blog/2022/09/14/algorithms-test/">【算法】深入掌握算法系列</a>
+          </li>
+        
+          <li>
+            <a href="/hexo-blog/2022/09/14/webpack-package/">【webpack】打包一个vue应用</a>
+          </li>
+        
+          <li>
+            <a href="/hexo-blog/2022/09/14/reduce/">【实现API】数组reduce方法的实现</a>
+          </li>
+        
+          <li>
+            <a href="/hexo-blog/2022/09/14/hello-world/">Hexo Simple Use</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 Yaobing Qian<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/hexo-blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/hexo-blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/hexo-blog/fancybox/jquery.fancybox.css">
+
+  
+<script src="/hexo-blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/hexo-blog/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
