@@ -16,17 +16,19 @@
   <meta name="author" content="Yaobing Qian">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Sudoku-数独问题 描述问题描述：给你一个大写单词word，在这样一个遍布着大写的字母(A-Z)的矩阵(n(行) x m(列))中，如果你可以通过上、下、左、右的方向去找到连续的字母组成word，则输出word的的字母的坐标（行列从1开始计算），如果遍历里矩阵所有位置都找不到，则输出NO； 示例： 123456789101112131415&#x2F;** * 输入 * 首行为标识矩阵的行(n)、列数(">
+    <meta name="description" content="Sudoku-数独问题 描述问题描述：给你一个大写单词word，在这样一个遍布着大写的字母(A-Z)的矩阵(n(行) x m(列))中，如果你可以通过上、下、左、右的方向去找到连续的字母组成word，则输出word的的字母的坐标（行列从1开始计算），如果遍历了矩阵所有位置都找不到，则输出NO； 示例： 123456789101112131415&#x2F;** * 输入 * 首行为标识矩阵的行(n)、列数(">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【算法】机试算法-数独算法变种">
 <meta property="og:url" content="https://happydemoney.github.io/hexo-blog/2022/09/22/algorithms-sudoku/index.html">
 <meta property="og:site_name" content="小彬哥的博客">
-<meta property="og:description" content="Sudoku-数独问题 描述问题描述：给你一个大写单词word，在这样一个遍布着大写的字母(A-Z)的矩阵(n(行) x m(列))中，如果你可以通过上、下、左、右的方向去找到连续的字母组成word，则输出word的的字母的坐标（行列从1开始计算），如果遍历里矩阵所有位置都找不到，则输出NO； 示例： 123456789101112131415&#x2F;** * 输入 * 首行为标识矩阵的行(n)、列数(">
+<meta property="og:description" content="Sudoku-数独问题 描述问题描述：给你一个大写单词word，在这样一个遍布着大写的字母(A-Z)的矩阵(n(行) x m(列))中，如果你可以通过上、下、左、右的方向去找到连续的字母组成word，则输出word的的字母的坐标（行列从1开始计算），如果遍历了矩阵所有位置都找不到，则输出NO； 示例： 123456789101112131415&#x2F;** * 输入 * 首行为标识矩阵的行(n)、列数(">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-09-22T01:29:30.007Z">
-<meta property="article:modified_time" content="2022-09-22T03:25:41.254Z">
+<meta property="og:image" content="https://happydemoney.github.io/hexo-blog/img/keyboard-number.webp">
+<meta property="article:published_time" content="2022-09-22T03:27:44.970Z">
+<meta property="article:modified_time" content="2022-09-28T07:51:25.295Z">
 <meta property="article:author" content="Yaobing Qian">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://happydemoney.github.io/hexo-blog/img/keyboard-number.webp">
   
   
   
@@ -206,7 +208,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-09-22 09:29" pubdate>
+        <time datetime="2022-09-22 11:27" pubdate>
           2022年9月22日 上午
         </time>
       </span>
@@ -273,7 +275,7 @@
               <div class="markdown-body">
                 
                 <p><a target="_blank" rel="noopener" href="https://www.nowcoder.com/practice/78a1a4ebe8a34c93aac006c44f6bf8a1?tpId=37&tqId=21267&rp=1&ru=/exam/oj/ta&qru=/exam/oj/ta&sourceUrl=/exam/oj/ta?tpId=37&difficulty=undefined&judgeStatus=undefined&tags=&title=">Sudoku-数独问题</a></p>
-<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>问题描述：给你一个大写单词word，在这样一个遍布着大写的字母(A-Z)的矩阵(n(行) x m(列))中，如果你可以通过上、下、左、右的方向去找到连续的字母组成word，则输出word的的字母的坐标（行列从1开始计算），如果遍历里矩阵所有位置都找不到，则输出NO；</p>
+<h2 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h2><p>问题描述：给你一个大写单词word，在这样一个遍布着大写的字母(A-Z)的矩阵(n(行) x m(列))中，如果你可以通过上、下、左、右的方向去找到连续的字母组成word，则输出word的的字母的坐标（行列从1开始计算），如果遍历了矩阵所有位置都找不到，则输出NO；</p>
 <p>示例：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * 输入</span><br><span class="hljs-comment"> * 首行为标识矩阵的行(n)、列数(m)，比如这个是4x5的矩阵</span><br><span class="hljs-comment"> * 第2行为目标单词word</span><br><span class="hljs-comment"> * 从第3行到第n+2行为矩阵内的字母</span><br><span class="hljs-comment"> */</span><br><span class="hljs-string">`4 5</span><br><span class="hljs-string">HELLO</span><br><span class="hljs-string">ABCDE</span><br><span class="hljs-string">HDFGA</span><br><span class="hljs-string">ELRTY</span><br><span class="hljs-string">ALOGH`</span><br><br><span class="hljs-comment">// 输出</span><br><span class="hljs-number">3</span> <span class="hljs-number">1</span> <span class="hljs-comment">// H(3 1) - E(4 1) - L(4 2) - L(5 2) - O(5 3)</span><br></code></pre></td></tr></table></figure>
 
@@ -347,15 +349,15 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/hexo-blog/2022/09/22/algorithms-test/" title="【算法】深入掌握算法系列">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【算法】深入掌握算法系列</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/hexo-blog/2022/09/21/website-skin-project/" title="【解决方案】前端换肤方案">
-                        <span class="hidden-mobile">【解决方案】前端换肤方案</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>
