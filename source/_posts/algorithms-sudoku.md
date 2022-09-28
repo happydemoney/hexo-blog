@@ -1,12 +1,13 @@
 ---
 title: 【算法】机试算法-数独算法变种
+index_img: /img/keyboard-number.webp
 ---
 
 [Sudoku-数独问题](https://www.nowcoder.com/practice/78a1a4ebe8a34c93aac006c44f6bf8a1?tpId=37&tqId=21267&rp=1&ru=/exam/oj/ta&qru=/exam/oj/ta&sourceUrl=%2Fexam%2Foj%2Fta%3FtpId%3D37&difficulty=undefined&judgeStatus=undefined&tags=&title=)
 
 ##  描述
 
-问题描述：给你一个大写单词word，在这样一个遍布着大写的字母(A-Z)的矩阵(n(行) x m(列))中，如果你可以通过上、下、左、右的方向去找到连续的字母组成word，则输出word的的字母的坐标（行列从1开始计算），如果遍历里矩阵所有位置都找不到，则输出NO；
+问题描述：给你一个大写单词word，在这样一个遍布着大写的字母(A-Z)的矩阵(n(行) x m(列))中，如果你可以通过上、下、左、右的方向去找到连续的字母组成word，则输出word的的字母的坐标（行列从1开始计算），如果遍历了矩阵所有位置都找不到，则输出NO；
 
 示例：
 

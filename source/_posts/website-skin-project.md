@@ -1,5 +1,6 @@
 ---
 title: 【解决方案】前端换肤方案
+index_img: /img/skin-change.webp
 ---
 
 | 方法 | 特点 | 兼容性 | 推荐度 |

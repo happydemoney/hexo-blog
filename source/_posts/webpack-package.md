@@ -1,5 +1,6 @@
 ---
 title: 【webpack】打包一个vue应用
+index_img: /img/webpack.webp
 ---
 Tag: `学习` `webapck`
 

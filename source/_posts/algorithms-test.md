@@ -1,5 +1,6 @@
 ---
 title: 【算法】深入掌握算法系列
+index_img: /img/coders-offical.webp
 ---
 
 [JavaScript-Algorithms](https://github.com/sisterAn/JavaScript-Algorithms) - 题源地址
