@@ -1,5 +1,7 @@
 # 基于hexo建的个人博客
 
+[ ![showUrl](https://img.shields.io/badge/%E6%BC%94%E7%A4%BA%E5%9C%B0%E5%9D%80-v0.1.0-orange.svg)](https://happydemoney.github.io/hexo-blog)
+
 ##  项目初始化
 
 ```js
