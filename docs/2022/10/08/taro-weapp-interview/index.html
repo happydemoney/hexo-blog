@@ -1,0 +1,674 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo-blog/img/fluid.png">
+  <link rel="icon" href="/hexo-blog/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yaobing Qian">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="相关文档Taro介绍 Taro 是一个开放式跨端跨框架解决方案，支持使用 React&#x2F;Vue&#x2F;Nerv 等框架来开发 微信 &#x2F; 京东 &#x2F; 百度 &#x2F; 支付宝 &#x2F; 字节跳动 &#x2F; QQ &#x2F; 飞书 小程序 &#x2F; H5 &#x2F; RN 等应用。 React TypeScript Taro-UI 注意：Taro 3 只能配合使用 taro-ui@next 版本安装命令： npm i taro-ui@next 开发目的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Taro】从0到1开发前端面试刷题小程序">
+<meta property="og:url" content="https://happydemoney.github.io/hexo-blog/2022/10/08/taro-weapp-interview/index.html">
+<meta property="og:site_name" content="小彬哥的博客">
+<meta property="og:description" content="相关文档Taro介绍 Taro 是一个开放式跨端跨框架解决方案，支持使用 React&#x2F;Vue&#x2F;Nerv 等框架来开发 微信 &#x2F; 京东 &#x2F; 百度 &#x2F; 支付宝 &#x2F; 字节跳动 &#x2F; QQ &#x2F; 飞书 小程序 &#x2F; H5 &#x2F; RN 等应用。 React TypeScript Taro-UI 注意：Taro 3 只能配合使用 taro-ui@next 版本安装命令： npm i taro-ui@next 开发目的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://happydemoney.github.io/hexo-blog/img/cpu.webp">
+<meta property="article:published_time" content="2022-10-08T02:25:49.579Z">
+<meta property="article:modified_time" content="2022-10-11T06:52:41.627Z">
+<meta property="article:author" content="Yaobing Qian">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://happydemoney.github.io/hexo-blog/img/cpu.webp">
+  
+  
+  
+  <title>【Taro】从0到1开发前端面试刷题小程序 - 小彬哥的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo-blog/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo-blog/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo-blog/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"happydemoney.github.io","root":"/hexo-blog/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo-blog/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo-blog/js/utils.js" ></script>
+  <script  src="/hexo-blog/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo-blog/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo-blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo-blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo-blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo-blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo-blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo-blog/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【Taro】从0到1开发前端面试刷题小程序"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-08 10:25" pubdate>
+          2022年10月8日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">【Taro】从0到1开发前端面试刷题小程序</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="相关文档"><a href="#相关文档" class="headerlink" title="相关文档"></a>相关文档</h2><p><a target="_blank" rel="noopener" href="https://taro-docs.jd.com/taro/docs/">Taro介绍</a></p>
+<p>Taro 是一个开放式跨端跨框架解决方案，支持使用 React/Vue/Nerv 等框架来开发 微信 / 京东 / 百度 / 支付宝 / 字节跳动 / QQ / 飞书 小程序 / H5 / RN 等应用。</p>
+<p><a target="_blank" rel="noopener" href="https://react.docschina.org/">React</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.tslang.cn/docs/home.html">TypeScript</a></p>
+<p><a target="_blank" rel="noopener" href="https://taro-ui.jd.com/#/docs/introduction">Taro-UI</a></p>
+<p>注意：<br>Taro 3 只能配合使用 taro-ui@next 版本<br>安装命令： <code>npm i taro-ui@next</code></p>
+<h2 id="开发目的"><a href="#开发目的" class="headerlink" title="开发目的"></a>开发目的</h2><ul>
+<li>实现一个前端面试刷题的小程序，可以刷题库进行知识点回顾以及查缺补漏，抽题考察进行知识点掌握训练；</li>
+<li>熟悉下微信小程序的开发、部署、发布等流程</li>
+<li>熟悉下技术栈<code>typescript+react-hooks+taro+taro-ui</code></li>
+</ul>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p><a target="_blank" rel="noopener" href="https://taro-docs.jd.com/taro/docs/GETTING-STARTED">tarojs的安装及使用</a></p>
+<p>  Taro 项目基于 node，请确保已具备较新的 node 环境（&gt;=12.0.0）</p>
+<h3 id="CLI-工具安装"><a href="#CLI-工具安装" class="headerlink" title="CLI 工具安装"></a>CLI 工具安装</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># 使用 npm 安装 CLI</span><br>$ npm install -g @tarojs/cli<br><br><span class="hljs-comment"># OR 使用 yarn 安装 CLI</span><br>$ yarn global add @tarojs/cli<br><br><span class="hljs-comment"># OR 安装了 cnpm，使用 cnpm 安装 CLI</span><br>$ cnpm install -g @tarojs/cli<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>值得一提的是，如果安装过程出现sass相关的安装错误，请在安装 mirror-config-china 后重试。</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ npm install -g mirror-config-china<br></code></pre></td></tr></table></figure>
+
+<h3 id="项目初始化"><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">taro init myApp<br></code></pre></td></tr></table></figure>
+
+<p>npm 5.2+ 也可在不全局安装的情况下使用 npx 创建模板项目：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ npx @tarojs/cli init myApp<br></code></pre></td></tr></table></figure>
+
+<p>按自己的喜好选择对应的开发工具即可，比如使用react还是vue/vue3，是否使用TS，使用sass还是less等等；</p>
+<p>一般来说，依赖安装会比较顺利，但某些情况下可能会安装失败，这时候你可以在项目目录下自己使用安装命令进行安装：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># 进入项目根目录</span><br>$ <span class="hljs-built_in">cd</span> myApp<br><br><span class="hljs-comment"># 使用 yarn 安装依赖</span><br>$ yarn<br><br><span class="hljs-comment"># OR 使用 cnpm 安装依赖</span><br>$ cnpm install<br><br><span class="hljs-comment"># OR 使用 npm 安装依赖</span><br>$ npm install<br></code></pre></td></tr></table></figure>
+
+<h3 id="编译运行"><a href="#编译运行" class="headerlink" title="编译运行"></a>编译运行</h3><p>以微信小程序为例</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># yarn</span><br>$ yarn dev:weapp<br>$ yarn build:weapp<br><br><span class="hljs-comment"># npm script</span><br>$ npm run dev:weapp<br>$ npm run build:weapp<br></code></pre></td></tr></table></figure>
+
+<h4 id="小程序开发者工具"><a href="#小程序开发者工具" class="headerlink" title="小程序开发者工具"></a>小程序开发者工具</h4><p>下载并打开<a target="_blank" rel="noopener" href="https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html">微信开发者工具</a>，然后选择项目根目录进行预览。</p>
+<p>需要注意开发者工具的项目设置：</p>
+<ul>
+<li>需要设置关闭 ES6 转 ES5 功能，开启可能报错</li>
+<li>需要设置关闭上传代码时样式自动补全，开启可能报错</li>
+<li>需要设置关闭代码压缩上传，开启可能报错</li>
+</ul>
+<p>以上步骤全部完成，可在小程序开发者工具里面预览到一个hello  world的界面；</p>
+<h3 id="小程序主流程简介"><a href="#小程序主流程简介" class="headerlink" title="小程序主流程简介"></a>小程序主流程简介</h3><p>参考了目前线上的一些前端面试题小程序，预计程序大概的流程如下：</p>
+<ul>
+<li>有三个底部tab：首页、题库、我的</li>
+<li>首页会有banner和题型分类区块（CSS、js、vue、react、ts、设计模式等等）</li>
+<li>题库就包含所有题型分类的总数据列表</li>
+<li>题目详情页：题目列表各项可点击至跳转至题目详情页</li>
+<li>我的页面会包含用户的基本信息展示，分享小程序、关于我们等一些介绍内容</li>
+</ul>
+<h4 id="小程序部分图示"><a href="#小程序部分图示" class="headerlink" title="小程序部分图示"></a>小程序部分图示</h4><p><img src="../img/taro-weapp-interview/interview-index.png" srcset="/hexo-blog/img/loading.gif" lazyload alt="interview-index"><br><img src="../img/taro-weapp-interview/interview-subject.png" srcset="/hexo-blog/img/loading.gif" lazyload alt="interview-subject"><br><img src="../img/taro-weapp-interview/interview-my.png" srcset="/hexo-blog/img/loading.gif" lazyload alt="interview-my"><br><img src="../img/taro-weapp-interview/interview-subject-list.png" srcset="/hexo-blog/img/loading.gif" lazyload alt="interview-subject-list"><br><img src="../img/taro-weapp-interview/interview-subject-detail.png" srcset="/hexo-blog/img/loading.gif" lazyload alt="interview-subject-detail"></p>
+<h4 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-comment">// 主要代码结构</span><br><span class="hljs-attribute">src</span><br>    -components<br>      <span class="hljs-attr">--SubjectItem</span> <span class="hljs-comment">// 题目展示组件</span><br>      <span class="hljs-attr">--TabBar</span> <span class="hljs-comment">// 底部tab组件</span><br>    -pages<br>      <span class="hljs-attr">--index</span> <span class="hljs-comment">// 首页</span><br>      <span class="hljs-attr">--my</span> <span class="hljs-comment">// 我的</span><br>      <span class="hljs-attr">--subject</span> <span class="hljs-comment">// 题库</span><br>      <span class="hljs-attr">--subjectDetail</span> <span class="hljs-comment">// 课程详情页</span><br>      <span class="hljs-attr">--subjectList</span> <span class="hljs-comment">// 课程列表页</span><br>app<span class="hljs-selector-class">.config</span><span class="hljs-selector-class">.ts</span> <span class="hljs-comment">// pages信息配置</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h2><p>UI库选择taro-ui，Taro 3 只能配合使用 taro-ui@next 版本<br>安装命令： <code>npm i taro-ui@next</code></p>
+<h3 id="首页"><a href="#首页" class="headerlink" title="首页"></a>首页</h3><ul>
+<li>使用taro-ui的AtGrid完成分类组件块的UI</li>
+<li>点击分类项跳转（Taro.navigateTo）题目列表页面</li>
+<li>封装底部tabBar组件，题库和我的页签会用到</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// src/pages/index/index.ts</span><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-variable constant_">FC</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">View</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@tarojs/components&#x27;</span><br><span class="hljs-keyword">import</span> &#123; <span class="hljs-title class_">AtGrid</span> &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;taro-ui&quot;</span><br><span class="hljs-keyword">import</span> <span class="hljs-title class_">Taro</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@tarojs/taro&#x27;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-title class_">TabBar</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../components/TabBar/index&#x27;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;./index.scss&#x27;</span><br><span class="hljs-keyword">import</span> &#123; classifyList &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./data/classifyList&#x27;</span>;<br><br>type <span class="hljs-title class_">GridItemData</span> = &#123;<br>  <span class="hljs-attr">image</span>: string;<br>  <span class="hljs-attr">value</span>: string;<br>  tag?: string;<br>&#125;;<br><br><span class="hljs-keyword">const</span> <span class="hljs-title function_">gridClick</span> = (<span class="hljs-params">item: GridItemData, index: number</span>) =&gt; &#123; <br>  <span class="hljs-title class_">Taro</span>.<span class="hljs-title function_">navigateTo</span>(&#123;<br>    <span class="hljs-attr">url</span>: <span class="hljs-string">`/pages/subjectList/index?tag=<span class="hljs-subst">$&#123;item.tag&#125;</span>`</span><br>  &#125;);<br>&#125;<br><br><span class="hljs-keyword">const</span> <span class="hljs-title class_">Index</span>: <span class="hljs-variable constant_">FC</span> = <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> &#123; <br>  <span class="hljs-keyword">return</span> (<br>    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&#x27;index&#x27;</span>&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">AtGrid</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">data</span>=<span class="hljs-string">&#123;classifyList&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">        <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;gridClick&#125;</span></span></span><br><span class="hljs-tag"><span class="language-xml">      /&gt;</span></span><br><span class="language-xml">      <span class="hljs-tag">&lt;<span class="hljs-name">TabBar</span> <span class="hljs-attr">current</span>=<span class="hljs-string">&#123;0&#125;</span> /&gt;</span></span><br><span class="language-xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span><br>  )<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title class_">Index</span>;<br><br><span class="hljs-comment">// src/app.config.ts</span><br><span class="hljs-attr">pages</span>: [<br>  <span class="hljs-string">&#x27;pages/index/index&#x27;</span>, <span class="hljs-comment">// 首页</span><br>  ...<br>],<br></code></pre></td></tr></table></figure>
+
+<h4 id="题目列表"><a href="#题目列表" class="headerlink" title="题目列表"></a>题目列表</h4>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【Taro】从0到1开发前端面试刷题小程序</div>
+      <div>https://happydemoney.github.io/hexo-blog/2022/10/08/taro-weapp-interview/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Yaobing Qian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo-blog/2022/10/11/vue2-mixins/" title="【Vue】vue2的mixins相关问题">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【Vue】vue2的mixins相关问题</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo-blog/2022/10/01/website-skin-project/" title="【解决方案】前端换肤方案">
+                        <span class="hidden-mobile">【解决方案】前端换肤方案</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo-blog/js/events.js" ></script>
+<script  src="/hexo-blog/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/hexo-blog/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo-blog/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo-blog/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

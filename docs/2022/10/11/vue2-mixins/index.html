@@ -16,23 +16,23 @@
   <meta name="author" content="Yaobing Qian">
   <meta name="keywords" content="">
   
-    <meta name="description" content="MDN-Array.prototype.reduce 介绍reduce() 方法对数组中的每个元素按序执行一个由您提供的 reducer 函数，每一次运行 reducer 会将先前元素的计算结果作为参数传入，最后将其结果汇总为单个返回值。 第一次执行回调函数时，不存在“上一次的计算结果”。如果需要回调函数从数组索引为 0 的元素开始执行，则需要传递初始值。否则，数组索引为 0 的元素将被作为初始值">
+    <meta name="description" content="页面导航问题描述参考文档问题描述解析 问题描述vue2中，假设有一个组件A，其中mixins了文件B和C，那么请问：  假设A的data中有一个myData的key，如果B和C中的data都有这个key，  created生命周期中访问this.myData，输出哪个文件的值 如果把A组件内的myData这个key删掉，那么输出哪个文件的值   假设A、B、C都定义了created这个生命周期函数">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【实现API】数组reduce方法的实现">
-<meta property="og:url" content="https://happydemoney.github.io/hexo-blog/2022/09/28/reduce/index.html">
+<meta property="og:title" content="【Vue】vue2的mixins相关问题">
+<meta property="og:url" content="https://happydemoney.github.io/hexo-blog/2022/10/11/vue2-mixins/index.html">
 <meta property="og:site_name" content="小彬哥的博客">
-<meta property="og:description" content="MDN-Array.prototype.reduce 介绍reduce() 方法对数组中的每个元素按序执行一个由您提供的 reducer 函数，每一次运行 reducer 会将先前元素的计算结果作为参数传入，最后将其结果汇总为单个返回值。 第一次执行回调函数时，不存在“上一次的计算结果”。如果需要回调函数从数组索引为 0 的元素开始执行，则需要传递初始值。否则，数组索引为 0 的元素将被作为初始值">
+<meta property="og:description" content="页面导航问题描述参考文档问题描述解析 问题描述vue2中，假设有一个组件A，其中mixins了文件B和C，那么请问：  假设A的data中有一个myData的key，如果B和C中的data都有这个key，  created生命周期中访问this.myData，输出哪个文件的值 如果把A组件内的myData这个key删掉，那么输出哪个文件的值   假设A、B、C都定义了created这个生命周期函数">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://happydemoney.github.io/hexo-blog/img/reduce.webp">
-<meta property="article:published_time" content="2022-09-28T07:53:28.812Z">
-<meta property="article:modified_time" content="2022-09-28T07:53:28.812Z">
+<meta property="og:image" content="https://happydemoney.github.io/hexo-blog/img/vue-js.webp">
+<meta property="article:published_time" content="2022-10-11T08:57:45.876Z">
+<meta property="article:modified_time" content="2022-10-12T02:52:27.436Z">
 <meta property="article:author" content="Yaobing Qian">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://happydemoney.github.io/hexo-blog/img/reduce.webp">
+<meta name="twitter:image" content="https://happydemoney.github.io/hexo-blog/img/vue-js.webp">
   
   
   
-  <title>【实现API】数组reduce方法的实现 - 小彬哥的博客</title>
+  <title>【Vue】vue2的mixins相关问题 - 小彬哥的博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -197,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【实现API】数组reduce方法的实现"></span>
+            <span id="subtitle" data-typed-text="【Vue】vue2的mixins相关问题"></span>
           
         </div>
 
@@ -208,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-09-28 15:53" pubdate>
-          2022年9月28日 下午
+        <time datetime="2022-10-11 16:57" pubdate>
+          2022年10月11日 下午
         </time>
       </span>
     
@@ -231,7 +231,7 @@
         
         
         
-          12 分钟
+          11 分钟
         
       </span>
     
@@ -269,17 +269,57 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">【实现API】数组reduce方法的实现</h1>
+            <h1 style="display: none">【Vue】vue2的mixins相关问题</h1>
             
             
               <div class="markdown-body">
                 
-                <p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">MDN-Array.prototype.reduce</a></p>
-<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>reduce() 方法对数组中的每个元素按序执行一个由您提供的 reducer 函数，每一次运行 reducer 会将先前元素的计算结果作为参数传入，最后将其结果汇总为单个返回值。</p>
-<p>第一次执行回调函数时，不存在“上一次的计算结果”。如果需要回调函数从数组索引为 0 的元素开始执行，则需要传递初始值。否则，数组索引为 0 的元素将被作为初始值 initialValue，迭代器将从第二个元素开始执行（索引为 1 而不是 0）。</p>
-<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> array1 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>];<br><br><span class="hljs-comment">// 0 + 1 + 2 + 3 + 4</span><br><span class="hljs-keyword">const</span> initialValue = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">const</span> sumWithInitial = array1.<span class="hljs-title function_">reduce</span>(<br>  <span class="hljs-function">(<span class="hljs-params">previousValue, currentValue</span>) =&gt;</span> previousValue + currentValue,<br>  initialValue<br>);<br><br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(sumWithInitial);<br><span class="hljs-comment">// expected output: 10</span><br></code></pre></td></tr></table></figure>
+                <h2 id="页面导航"><a href="#页面导航" class="headerlink" title="页面导航"></a>页面导航</h2><p><a href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0">问题描述</a><br><a href="#%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3">参考文档</a><br><a href="#%E6%83%B3%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0%E8%A7%A3%E6%9E%90">问题描述解析</a></p>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>vue2中，假设有一个组件A，其中mixins了文件B和C，那么请问：</p>
+<ul>
+<li><p>假设A的data中有一个myData的key，如果B和C中的data都有这个key，</p>
+<ol>
+<li>created生命周期中访问this.myData，输出哪个文件的值</li>
+<li>如果把A组件内的myData这个key删掉，那么输出哪个文件的值</li>
+</ol>
+</li>
+<li><p>假设A、B、C都定义了created这个生命周期函数</p>
+<ol>
+<li>生命周期函数是怎么执行的？</li>
+<li>如果都执行，那么执行顺序是什么？</li>
+<li>如果在C文件中在mixins引入B，这个时候生命周期怎么执行？</li>
+</ol>
+</li>
+</ul>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p>如果对以上问题有疑惑，可以看看下面这篇文章，写的很清晰</p>
+<p><a target="_blank" rel="noopener" href="https://vue3js.cn/interview/vue/mixin.html">说说你对vue的mixin的理解，有什么应用场景？</a></p>
+<h3 id="文档结论如下"><a href="#文档结论如下" class="headerlink" title="文档结论如下"></a>文档结论如下</h3><p>vue2中mixin有四种策略：</p>
+<ol>
+<li>替换型策略有props、methods、inject、computed，就是将新的同名参数替代旧的参数</li>
+<li>合并型策略是data, 通过set方法进行合并和重新赋值</li>
+<li>队列型策略有生命周期函数和watch，原理是将函数存入一个数组，然后正序遍历依次执行</li>
+<li>叠加型有component、directives、filters，通过原型链进行层层的叠加</li>
+</ol>
+<h2 id="问题描述解析"><a href="#问题描述解析" class="headerlink" title="问题描述解析"></a>问题描述解析</h2><p>简单分析下, 问题描述中有这样三个对象：<br><code>componentA</code>, <code>mixinB</code>, <code>mixinC</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 1. 对于data</span><br>componentA.<span class="hljs-property">data</span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(mixinB.<span class="hljs-property">data</span>, mixinC.<span class="hljs-property">data</span>, componentA.<span class="hljs-property">data</span>);<br><br><span class="hljs-comment">// 2. 对于methods</span><br>componentA.<span class="hljs-property">methods</span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(&#123;...mixinB.<span class="hljs-property">methods</span>&#125;, &#123;...mixinC.<span class="hljs-property">methods</span>&#125;, &#123;...componentA.<span class="hljs-property">methods</span>&#125;);<br><br><span class="hljs-comment">// 3. 对于生命周期，比如created</span><br>componentA.<span class="hljs-property">created</span> = <span class="hljs-function">() =&gt;</span> [mixinB.<span class="hljs-property">created</span>, mixinC.<span class="hljs-property">created</span>, componentA.<span class="hljs-property">created</span>].<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">created</span> =&gt;</span> <span class="hljs-title function_">created</span>());<br></code></pre></td></tr></table></figure>
 
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">reduceFn</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">reducer<span class="hljs-comment">/*, initValue*/</span></span>) &#123;<br>  <span class="hljs-comment">// reducer必须是一个函数</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> reducer !== <span class="hljs-string">&#x27;function&#x27;</span>) &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeError</span>(<span class="hljs-string">`<span class="hljs-subst">$&#123;reducer&#125;</span> is not a function.`</span>);<br>  &#125;<br>  <span class="hljs-comment">// 是否包含初始值</span><br>  <span class="hljs-keyword">const</span> hasInitValue = <span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>;<br>  <span class="hljs-comment">// 当前遍历的数组</span><br>  <span class="hljs-keyword">const</span> array = <span class="hljs-title class_">Object</span>(<span class="hljs-variable language_">this</span>);<br>  <span class="hljs-keyword">const</span> length = array.<span class="hljs-property">length</span>;<br>  <span class="hljs-comment">// 数组长度要大于0或包含初始值</span><br>  <span class="hljs-keyword">if</span> (length === <span class="hljs-number">0</span> &amp;&amp; !hasInitValue) &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypeError</span>(<span class="hljs-string">&#x27;Reduce of empty array with no initial value&#x27;</span>);<br>  &#125;<br>  <span class="hljs-comment">// 上一次调用 reducer 时的返回值, 此处为初始值赋值</span><br>  <span class="hljs-keyword">let</span> previousValue = hasInitValue ? <span class="hljs-variable language_">arguments</span>[<span class="hljs-number">1</span>] : array[<span class="hljs-number">0</span>];<br>  <span class="hljs-comment">// 数组中正在处理的元素的索引</span><br>  <span class="hljs-keyword">let</span> currentIndex = hasInitValue ? <span class="hljs-number">0</span> : <span class="hljs-number">1</span>;<br>  <span class="hljs-keyword">while</span> (currentIndex &lt; length) &#123;<br>    previousValue = <span class="hljs-title function_">reducer</span>(previousValue, array[currentIndex], currentIndex, array);<br>    currentIndex ++;<br>  &#125;<br>  <span class="hljs-keyword">return</span> previousValue;<br>&#125;;<br><br><span class="hljs-comment">// test</span><br>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>].<span class="hljs-title function_">reduceFn</span>(<span class="hljs-function">(<span class="hljs-params">prev, cur</span>) =&gt;</span> prev + cur); <span class="hljs-comment">// 15</span><br>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>].<span class="hljs-title function_">reduceFn</span>(<span class="hljs-function">(<span class="hljs-params">prev, cur</span>) =&gt;</span> prev + cur, <span class="hljs-number">10</span>); <span class="hljs-comment">// 25</span><br></code></pre></td></tr></table></figure>
+<h3 id="问题描述解答"><a href="#问题描述解答" class="headerlink" title="问题描述解答"></a>问题描述解答</h3><p>vue2中，假设有一个组件A，其中mixins了文件B和C，那么请问：</p>
+<ul>
+<li><p>假设A的data中有一个myData的key，如果B和C中的data都有这个key，</p>
+<ol>
+<li>created生命周期中访问this.myData，输出哪个文件的值<br><code>输出当前组件的值</code></li>
+<li>如果把A组件内的myData这个key删掉，那么输出哪个文件的值<br><code>输出mixins数组最尾部那个mixin文件中的值，比如mixins:[B, C]，那么输出的就是C文件中的值</code></li>
+</ol>
+</li>
+<li><p>假设A、B、C都定义了created这个生命周期函数</p>
+<ol>
+<li>生命周期函数是怎么执行的？<br><code>全部都会执行，因为生命周期在mixin中会处理为队列，按顺序执行</code></li>
+<li>如果都执行，那么执行顺序是什么？<br><code>组件本身A --&gt; mixin B --&gt; mixin C</code></li>
+<li>如果在C文件中在mixins引入B，这个时候生命周期怎么执行？<br><code>组件本身A --&gt; mixin B --&gt; mixin C, mixin处理中做了去重</code></li>
+</ol>
+</li>
+</ul>
+
                 
               </div>
             
@@ -296,8 +336,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【实现API】数组reduce方法的实现</div>
-      <div>https://happydemoney.github.io/hexo-blog/2022/09/28/reduce/</div>
+      <div>【Vue】vue2的mixins相关问题</div>
+      <div>https://happydemoney.github.io/hexo-blog/2022/10/11/vue2-mixins/</div>
     </div>
     <div class="license-meta">
       
@@ -309,7 +349,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年9月28日</div>
+          <div>2022年10月11日</div>
         </div>
       
       
@@ -341,18 +381,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/hexo-blog/2022/09/28/request-queue/" title="【实用功能】请求队列">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【实用功能】请求队列</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/hexo-blog/2022/09/28/algorithms-test/" title="【算法】深入掌握算法系列">
-                        <span class="hidden-mobile">【算法】深入掌握算法系列</span>
+                      <a href="/hexo-blog/2022/10/08/taro-weapp-interview/" title="【Taro】从0到1开发前端面试刷题小程序">
+                        <span class="hidden-mobile">【Taro】从0到1开发前端面试刷题小程序</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
