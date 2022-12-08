@@ -118,11 +118,11 @@ $ npm run build:weapp
 
 ####  小程序部分图示
 
-![interview-index](../img/taro-weapp-interview/interview-index.png)
-![interview-subject](../img/taro-weapp-interview/interview-subject.png)
-![interview-my](../img/taro-weapp-interview/interview-my.png)
-![interview-subject-list](../img/taro-weapp-interview/interview-subject-list.png)
-![interview-subject-detail](../img/taro-weapp-interview/interview-subject-detail.png)
+![interview-index](img/taro-weapp-interview/interview-index.png)
+![interview-subject](img/taro-weapp-interview/interview-subject.png)
+![interview-my](img/taro-weapp-interview/interview-my.png)
+![interview-subject-list](img/taro-weapp-interview/interview-subject-list.png)
+![interview-subject-detail](img/taro-weapp-interview/interview-subject-detail.png)
 
 ####  代码结构
 
